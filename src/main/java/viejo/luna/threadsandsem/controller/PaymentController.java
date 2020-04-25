@@ -10,7 +10,7 @@ public class PaymentController {
     private static final int CODE_SUCCESS = 100;
     private static final int AUTH_FAILURE = 102;
 
-    @GetMapping("/ticket")
+    @GetMapping("/compra")
     public String greeting() {
         return "Hello World";
     }
