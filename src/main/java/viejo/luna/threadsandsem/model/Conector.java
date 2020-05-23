@@ -25,7 +25,8 @@ public class Conector {
         }
     }
     public void nuevaDB(){
-        String url = "jdbc:sqlite:C:\\Users\\Nacho\\Desktop\\Engineering\\Software Libre\\TP hilos\\Repositorio\\tpdb.db"; //ACA VA LA URL DONDE ESTA LA BASE DE DATOS, DEPENDE DE LA PC
+        //String url = "jdbc:sqlite:C:\\Users\\Nacho\\Desktop\\Engineering\\Software Libre\\TP hilos\\Repositorio\\tpdb.db"; //ACA VA LA URL DONDE ESTA LA BASE DE DATOS, DEPENDE DE LA PC
+        String url = "jdbc:sqlite:C:.\\tpdb.db";
         try (Connection conn = DriverManager.getConnection(url)) {
             if (conn != null) {
                 DatabaseMetaData meta = conn.getMetaData();
@@ -39,12 +40,12 @@ public class Conector {
     }
     public void crearNuevaTabla() {
         // SQLite connection string
-        String url = "jdbc:sqlite:C:\\Users\\Nacho\\Desktop\\Engineering\\Software Libre\\TP hilos\\Repositorio\\tpdb.db"; //ACA VA LA URL DONDE ESTA LA BASE DE DATOS, DEPENDE DE LA PC
-
+        //String url = "jdbc:sqlite:C:\\Users\\Nacho\\Desktop\\Engineering\\Software Libre\\TP hilos\\Repositorio\\tpdb.db"; //ACA VA LA URL DONDE ESTA LA BASE DE DATOS, DEPENDE DE LA PC
+        String url = "jdbc:sqlite:C:.\\tpdb.db";
         // SQL statement for creating a new table
         String sql = "CREATE TABLE IF NOT EXISTS tickets (\n"
                 + "	id integer PRIMARY KEY,\n"
-                + "	estado text NOT NULL\n"
+                + "	Ticket ticket NOT NULL\n"
                 + ");";
 
         try (Connection conn = DriverManager.getConnection(url);
@@ -57,7 +58,8 @@ public class Conector {
     }
     private Connection connect() {
         // SQLite connection string
-        String url = "jdbc:sqlite:C:\\Users\\Nacho\\Desktop\\Engineering\\Software Libre\\TP hilos\\Repositorio\\tpdb.db"; //ACA VA LA URL DONDE ESTA LA BASE DE DATOS, DEPENDE DE LA PC
+        //String url = "jdbc:sqlite:C:\\Users\\Nacho\\Desktop\\Engineering\\Software Libre\\TP hilos\\Repositorio\\tpdb.db"; //ACA VA LA URL DONDE ESTA LA BASE DE DATOS, DEPENDE DE LA PC
+        String url = "jdbc:sqlite:C:.\\tpdb.db";
         Connection conn = null;
         try {
             conn = DriverManager.getConnection(url);
@@ -66,19 +68,19 @@ public class Conector {
         }
         return conn;
     }
-    public void insert(String estado) {
-        String sql = "INSERT INTO tickets(estado) VALUES(?)";
+    public void insert(Ticket ticket) {
+        String sql = "INSERT INTO tickets(ticket) VALUES(?)";
 
         try (Connection conn = this.connect();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
-                pstmt.setString(1, estado);
+                pstmt.setObject(1, ticket);
                 pstmt.executeUpdate();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
     }
     public void selectAll(){
-        String sql = "SELECT id, estado FROM tickets";
+        String sql = "SELECT id, ticket FROM tickets";
 
         try (Connection conn = this.connect();
              Statement stmt  = conn.createStatement();
@@ -87,7 +89,7 @@ public class Conector {
             // loop through the result set
             while (rs.next()) {
                 System.out.println(rs.getInt("id") +  "\t" +
-                        rs.getString("estado"));
+                        rs.getString("ticket"));
             }
         } catch (SQLException e) {
             System.out.println(e.getMessage());
