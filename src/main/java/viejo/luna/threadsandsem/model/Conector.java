@@ -1,18 +1,13 @@
 package viejo.luna.threadsandsem.model;
-import java.sql.Connection;
-import java.sql.DatabaseMetaData;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
+
+import org.springframework.boot.autoconfigure.amqp.RabbitProperties;
 
 public class Conector {
     public Conector(){
 
     }
     public void conectar() {
-        Connection connection = null;
+        RabbitProperties.Cache.Connection connection = null;
         try {
             connection = DriverManager.getConnection("jdbc:sqlite:data.sqlite");
             if (connection != null) {
