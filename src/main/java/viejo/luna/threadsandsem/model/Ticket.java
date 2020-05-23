@@ -5,6 +5,10 @@ public class Ticket {
     private int id;
     private String state;
 
+    public Ticket(){
+        this.state="Libre";
+    }
+
     public void setId(int id) {
         this.id = id;
     }
