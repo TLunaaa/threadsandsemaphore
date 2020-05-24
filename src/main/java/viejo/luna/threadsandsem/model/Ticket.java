@@ -5,13 +5,19 @@ public class Ticket {
     private int id;
     private String state;
 
-    public Ticket(){
+    public Ticket(int id){
         this.state="Libre";
+        this.id=id;
     }
 
     public void setId(int id) {
         this.id = id;
     }
+
+    public int getId() {
+        return this.id;
+    }
+
 
     public String getState() {
         return state;

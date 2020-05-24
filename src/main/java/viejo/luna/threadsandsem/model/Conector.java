@@ -1,4 +1,6 @@
 package viejo.luna.threadsandsem.model;
+//import com.sun.org.apache.xpath.internal.operations.Bool;
+
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
@@ -25,8 +27,7 @@ public class Conector {
         }
     }
     public void nuevaDB(){
-        //String url = "jdbc:sqlite:C:\\Users\\Nacho\\Desktop\\Engineering\\Software Libre\\TP hilos\\Repositorio\\tpdb.db"; //ACA VA LA URL DONDE ESTA LA BASE DE DATOS, DEPENDE DE LA PC
-        String url = "jdbc:sqlite:C:.\\tpdb.db";
+        String url = "jdbc:sqlite:C:\\Users\\Nacho\\Desktop\\Engineering\\Software Libre\\TP hilos\\Repositorio\\tpdb.db"; //ACA VA LA URL DONDE ESTA LA BASE DE DATOS, DEPENDE DE LA PC
         try (Connection conn = DriverManager.getConnection(url)) {
             if (conn != null) {
                 DatabaseMetaData meta = conn.getMetaData();
@@ -40,12 +41,12 @@ public class Conector {
     }
     public void crearNuevaTabla() {
         // SQLite connection string
-        //String url = "jdbc:sqlite:C:\\Users\\Nacho\\Desktop\\Engineering\\Software Libre\\TP hilos\\Repositorio\\tpdb.db"; //ACA VA LA URL DONDE ESTA LA BASE DE DATOS, DEPENDE DE LA PC
-        String url = "jdbc:sqlite:C:.\\tpdb.db";
+        String url = "jdbc:sqlite:C:\\Users\\Nacho\\Desktop\\Engineering\\Software Libre\\TP hilos\\Repositorio\\tpdb.db"; //ACA VA LA URL DONDE ESTA LA BASE DE DATOS, DEPENDE DE LA PC
+
         // SQL statement for creating a new table
         String sql = "CREATE TABLE IF NOT EXISTS tickets (\n"
                 + "	id integer PRIMARY KEY,\n"
-                + "	Ticket ticket NOT NULL\n"
+                + "	estado text NOT NULL\n"
                 + ");";
 
         try (Connection conn = DriverManager.getConnection(url);
@@ -58,8 +59,7 @@ public class Conector {
     }
     private Connection connect() {
         // SQLite connection string
-        //String url = "jdbc:sqlite:C:\\Users\\Nacho\\Desktop\\Engineering\\Software Libre\\TP hilos\\Repositorio\\tpdb.db"; //ACA VA LA URL DONDE ESTA LA BASE DE DATOS, DEPENDE DE LA PC
-        String url = "jdbc:sqlite:C:.\\tpdb.db";
+        String url = "jdbc:sqlite:C:\\Users\\Nacho\\Desktop\\Engineering\\Software Libre\\TP hilos\\Repositorio\\tpdb.db"; //ACA VA LA URL DONDE ESTA LA BASE DE DATOS, DEPENDE DE LA PC
         Connection conn = null;
         try {
             conn = DriverManager.getConnection(url);
@@ -68,19 +68,19 @@ public class Conector {
         }
         return conn;
     }
-    public void insert(Ticket ticket) {
-        String sql = "INSERT INTO tickets(ticket) VALUES(?)";
+    public void insert(String estado) {
+        String sql = "INSERT INTO tickets(estado) VALUES(?)";
 
         try (Connection conn = this.connect();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
-                pstmt.setObject(1, ticket);
-                pstmt.executeUpdate();
+            pstmt.setString(1, estado);
+            pstmt.executeUpdate();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
     }
     public void selectAll(){
-        String sql = "SELECT id, ticket FROM tickets";
+        String sql = "SELECT id, estado FROM tickets";
 
         try (Connection conn = this.connect();
              Statement stmt  = conn.createStatement();
@@ -89,10 +89,74 @@ public class Conector {
             // loop through the result set
             while (rs.next()) {
                 System.out.println(rs.getInt("id") +  "\t" +
-                        rs.getString("ticket"));
+                        rs.getString("estado"));
             }
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
     }
+
+    public int selectTicketLibre(){ //devuelve el id del ticket o 0 si no hay
+        String sql = "SELECT id, estado FROM tickets";
+        int res = 0;
+        Boolean band = true;
+
+        try (Connection conn = this.connect();
+             Statement stmt  = conn.createStatement();
+             ResultSet rs    = stmt.executeQuery(sql)){
+
+            // loop through the result set
+            while ((rs.next())&&(band)) {
+                if(rs.getString("estado").equals("Libre")) {
+                    res = rs.getInt("id");
+                    update(res,"Reservado");
+                    band = false;
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return res;
+    }
+
+    public int selectTicketReservado(){ //devuelve el id del ticket o 0 si no hay
+        String sql = "SELECT id, estado FROM tickets";
+        int res = 0;
+        Boolean band = true;
+
+        try (Connection conn = this.connect();
+             Statement stmt  = conn.createStatement();
+             ResultSet rs    = stmt.executeQuery(sql)){
+
+            // loop through the result set
+            while ((rs.next())&&(band)) {
+                if(rs.getString("estado").equals("Reservado")) {
+                    res = rs.getInt("id");
+                    update(res,"Reservado");
+                    band = false;
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return res;
+    }
+
+    public void update(int id, String estado) {
+        String sql = "UPDATE tickets SET estado = ? "
+                + "WHERE id = ?";
+
+        try (Connection conn = this.connect();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            // set the corresponding param
+            pstmt.setString(1, estado);
+            pstmt.setInt(2, id);
+            // update
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
 }

@@ -1,0 +1,29 @@
+[33mcommit a7af97a1253e96d37c5ebd727edacc16cae243b5[m[33m ([m[1;36mHEAD -> [m[1;32mnacho[m[33m, [m[1;31morigin/nacho[m[33m)[m
+Author: nachoviejo <ignacionachoviejo@gmail.com>
+Date:   Sat May 23 19:25:59 2020 -0300
+
+    conector con objetos
+
+[33mcommit 00c983bf08db21b9334c545e68fc567d4dadb221[m
+Author: nachoviejo <ignacionachoviejo@gmail.com>
+Date:   Sat Apr 25 19:35:23 2020 -0300
+
+    conexion con la db
+
+[33mcommit 29d0fb73b3d4a63e2f720b17486232970dbe6ef3[m[33m ([m[1;31morigin/master[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmaster[m[33m)[m
+Author: Tomas Luna <tomasluna1996@gmail.com>
+Date:   Fri Apr 24 21:29:19 2020 -0300
+
+    domain object added
+
+[33mcommit 2b582ad3c58972e9e9e82b26cccad4a32ce8aea6[m
+Author: Tomas Luna <tomasluna1996@gmail.com>
+Date:   Fri Apr 24 20:18:31 2020 -0300
+
+    controller for GET request at /ticket
+
+[33mcommit 40a9f105739d77c224a4e20518eb477913492e66[m
+Author: Tomas Luna <tomasluna1996@gmail.com>
+Date:   Fri Apr 24 19:26:57 2020 -0300
+
+    init commit
