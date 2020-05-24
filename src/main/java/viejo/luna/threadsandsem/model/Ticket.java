@@ -2,11 +2,17 @@ package viejo.luna.threadsandsem.model;
 
 public class Ticket {
 
+    private static int count = 0;
     private int id;
     private String state;
 
     public Ticket(){
-        this.state="Libre";
+        this.id = ++count;
+        this.state="LIBRE";
+    }
+
+    public Ticket(int id){
+        this.state="RESERVADO";
     }
 
     public void setId(int id) {
@@ -19,5 +25,9 @@ public class Ticket {
 
     public void setState(String state) {
         this.state = state;
+    }
+
+    public int getId() {
+        return this.id;
     }
 }

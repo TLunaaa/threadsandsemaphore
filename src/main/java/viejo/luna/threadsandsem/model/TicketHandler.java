@@ -1,20 +1,29 @@
 package viejo.luna.threadsandsem.model;
 
-import org.apache.tomcat.jni.Thread;
-
 public class TicketHandler extends Thread {
     private final Conector BD = new Conector();
-    private Ticket;
+    private Ticket ticket;
+    private boolean ended = false;
 
     public TicketHandler(){
-
     }
 
-    public int run(){
-        return 200;
+    public void run(){
+        //Integer id_ticket = consulta a la base de datos y devuelve el id
+        int id_ticket = 0;
+        setTicket(id_ticket);
+        this.ended = true;
     }
 
-    private Ticket getTicket(){
-        
+    public Ticket getTicket(){
+        return this.ticket;
+    }
+
+    private void setTicket(int id){
+        this.ticket = new Ticket(id);
+    }
+
+    public boolean isEnded() {
+        return ended;
     }
 }
