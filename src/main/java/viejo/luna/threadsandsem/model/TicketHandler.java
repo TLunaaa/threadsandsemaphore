@@ -10,7 +10,7 @@ public class TicketHandler extends Thread {
 
     public void run(){
         //TODO
-        int id_ticket = 0 //BD.(idticket)
+        int id_ticket = 0; //BD.(idticket)
         setTicket(id_ticket);
         this.ended = true;
     }

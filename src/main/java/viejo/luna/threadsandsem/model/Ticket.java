@@ -19,6 +19,10 @@ public class Ticket {
         this.id = id;
     }
 
+    public int getId() {
+        return this.id;
+    }
+
     public String getState() {
         return state;
     }
@@ -27,7 +31,4 @@ public class Ticket {
         this.state = state;
     }
 
-    public int getId() {
-        return this.id;
-    }
 }
