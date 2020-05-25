@@ -9,8 +9,8 @@ public class TicketHandler extends Thread {
     }
 
     public void run(){
-        //Integer id_ticket = consulta a la base de datos y devuelve el id
-        int id_ticket = 0;
+        //TODO
+        int id_ticket = 0 //BD.(idticket)
         setTicket(id_ticket);
         this.ended = true;
     }

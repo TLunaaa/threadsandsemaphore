@@ -7,8 +7,8 @@ import viejo.luna.threadsandsem.model.TicketHandler;
 @RestController
 public class PaymentController {
 
-    @GetMapping(value= "/compra", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Integer greeting() {
+    @GetMapping(value= "/reserva", produces = MediaType.APPLICATION_JSON_VALUE)
+    public Integer booking() {
         TicketHandler tickethandler = new TicketHandler();
         tickethandler.start();
         while(tickethandler.isEnded() == false){};
@@ -17,7 +17,16 @@ public class PaymentController {
         }
         return null;
     }
-
+    @GetMapping(value= "/pago", produces = MediaType.APPLICATION_JSON_VALUE)
+    public Integer payment() {
+        TicketHandler tickethandler = new TicketHandler();
+        tickethandler.start();
+        while(tickethandler.isEnded() == false){};
+        if(tickethandler.getTicket() != null){
+            return tickethandler.getTicket().getId();
+        }
+        return null;
+    }
 
 
 
