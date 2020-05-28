@@ -1,7 +1,8 @@
 package viejo.luna.threadsandsem.model;
 
-//import com.sun.org.apache.xpath.internal.operations.Bool;
+import org.springframework.stereotype.Component;
 
+import java.io.File;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
@@ -10,30 +11,40 @@ import java.sql.Statement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
+@Component
 public class Conector {
-    public Conector(){
 
-    }
-    public void conectar() {
-        Connection connection = null;
-        try {
-            connection = DriverManager.getConnection("jdbc:sqlite:data.sqlite");
-            if (connection != null) {
-                System.out.println("Conexion exitosa");
+    public Conector(){
+        File tmpDir = new File("./tpdb.db");
+        if(!tmpDir.exists()){
+            this.nuevaDB(); //solo la primera vez xd
+            this.crearNuevaTabla(); //solo la primera vez xd
+            for(int i=1;i<51;i++){
+                this.insert(i,"Libre");
             }
         }
-        catch(Exception e){
-            System.err.println(e.getClass().getName()+ ": " + e.getMessage());
+        //System.out.println(this.selectTicketLibre());
+    }
+    private Connection conectar() {
+        Connection connection = null;
+        try {
+            Class.forName("org.sqlite.JDBC");
+            connection = DriverManager.getConnection("jdbc:sqlite:tpdb.db");
+        }
+        catch(SQLException | ClassNotFoundException e){
+            System.out.println(e.getClass().getName()+ ": " + e.getMessage());
             System.out.println("Error en la conexion");
         }
+        return connection;
     }
+
     public void nuevaDB(){
-        String url = "jdbc:sqlite:C:\\Users\\Nacho\\Desktop\\Engineering\\Software Libre\\TP hilos\\Repositorio\\tpdb.db"; //ACA VA LA URL DONDE ESTA LA BASE DE DATOS, DEPENDE DE LA PC
-        try (Connection conn = DriverManager.getConnection(url)) {
+        try (Connection conn = this.conectar()) {
             if (conn != null) {
                 DatabaseMetaData meta = conn.getMetaData();
                 System.out.println("The driver name is " + meta.getDriverName());
                 System.out.println("A new database has been created.");
+                conn.close();
             }
 
         } catch (SQLException e) {
@@ -42,15 +53,13 @@ public class Conector {
     }
     public void crearNuevaTabla() {
         // SQLite connection string
-        String url = "jdbc:sqlite:C:\\Users\\Nacho\\Desktop\\Engineering\\Software Libre\\TP hilos\\Repositorio\\tpdb.db"; //ACA VA LA URL DONDE ESTA LA BASE DE DATOS, DEPENDE DE LA PC
-
         // SQL statement for creating a new table
         String sql = "CREATE TABLE IF NOT EXISTS tickets (\n"
-                + "	id integer PRIMARY KEY,\n"
+                + "	id int PRIMARY KEY,\n"
                 + "	estado text NOT NULL\n"
                 + ");";
 
-        try (Connection conn = DriverManager.getConnection(url);
+        try (Connection conn = this.conectar();
              Statement stmt = conn.createStatement()) {
             // create a new table
             stmt.execute(sql);
@@ -58,32 +67,22 @@ public class Conector {
             System.out.println(e.getMessage());
         }
     }
-    private Connection connect() {
-        // SQLite connection string
-        String url = "jdbc:sqlite:C:\\Users\\Nacho\\Desktop\\Engineering\\Software Libre\\TP hilos\\Repositorio\\tpdb.db"; //ACA VA LA URL DONDE ESTA LA BASE DE DATOS, DEPENDE DE LA PC
-        Connection conn = null;
-        try {
-            conn = DriverManager.getConnection(url);
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-        }
-        return conn;
-    }
-    public void insert(String estado) {
-        String sql = "INSERT INTO tickets(estado) VALUES(?)";
 
-        try (Connection conn = this.connect();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setString(1, estado);
+    public void insert(int id,String estado) {
+        String sql = "INSERT INTO tickets(id,estado) VALUES(?,?)";
+        try (Connection conn = this.conectar();
+            PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(2, estado);
+            pstmt.setInt(1,id);
             pstmt.executeUpdate();
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            System.out.println("Error " + e.getMessage());
         }
     }
     public void selectAll(){
         String sql = "SELECT id, estado FROM tickets";
 
-        try (Connection conn = this.connect();
+        try (Connection conn = this.conectar();
              Statement stmt  = conn.createStatement();
              ResultSet rs    = stmt.executeQuery(sql)){
 
@@ -102,7 +101,7 @@ public class Conector {
         int res = 0;
         Boolean band = true;
 
-        try (Connection conn = this.connect();
+        try (Connection conn = this.conectar();
              Statement stmt  = conn.createStatement();
              ResultSet rs    = stmt.executeQuery(sql)){
 
@@ -115,7 +114,7 @@ public class Conector {
                 }
             }
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            System.out.println("sadasd " + e.getMessage());
         }
         return res;
     }
@@ -125,7 +124,7 @@ public class Conector {
         int res = 0;
         Boolean band = true;
 
-        try (Connection conn = this.connect();
+        try (Connection conn = this.conectar();
              Statement stmt  = conn.createStatement();
              ResultSet rs    = stmt.executeQuery(sql)){
 
@@ -147,7 +146,7 @@ public class Conector {
         String sql = "UPDATE tickets SET estado = ? "
                 + "WHERE id = ?";
 
-        try (Connection conn = this.connect();
+        try (Connection conn = this.conectar();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             // set the corresponding param
