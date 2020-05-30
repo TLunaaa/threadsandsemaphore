@@ -1,7 +1,5 @@
 package viejo.luna.threadsandsem.model;
 
-import org.springframework.stereotype.Component;
-
 import java.io.File;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
@@ -11,10 +9,10 @@ import java.sql.Statement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
-@Component
 public class Conector {
+    private static Conector obj ;
 
-    public Conector(){
+    private Conector(){
         File tmpDir = new File("./tpdb.db");
         if(!tmpDir.exists()){
             this.nuevaDB(); //solo la primera vez xd
@@ -25,6 +23,14 @@ public class Conector {
         }
         //System.out.println(this.selectTicketLibre());
     }
+
+    public static Conector getInstance()
+    {
+        if (obj==null)
+            obj = new Conector();
+        return obj;
+    }
+
     private Connection conectar() {
         Connection connection = null;
         try {

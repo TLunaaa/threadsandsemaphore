@@ -1,9 +1,6 @@
 package viejo.luna.threadsandsem.model;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
-public class TicketHandler extends Thread {
+public class TicketHandler {
     private Conector connector;
     private Ticket ticket;
     private boolean ended = false;

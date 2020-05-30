@@ -1,6 +1,6 @@
 package viejo.luna.threadsandsem.model;
 
-public class Ticket {
+public class Ticket extends Thread {
 
     private int id;
     private String state;
