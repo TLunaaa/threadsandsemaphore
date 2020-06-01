@@ -115,7 +115,6 @@ public class Conector {
             while ((rs.next())&&(band)) {
                 if(rs.getString("estado").equals("Libre")) {
                     res = rs.getInt("id");
-                    update(res,"Reservado");
                     band = false;
                 }
             }
@@ -125,7 +124,7 @@ public class Conector {
         return res;
     }
 
-    public int selectTicketReservado(){ //devuelve el id del ticket o 0 si no hay
+    public int selectTicketReservado(int idTicket){ //devuelve el id del ticket o 0 si no hay
         String sql = "SELECT id, estado FROM tickets";
         int res = 0;
         Boolean band = true;
@@ -138,7 +137,6 @@ public class Conector {
             while ((rs.next())&&(band)) {
                 if(rs.getString("estado").equals("Reservado")) {
                     res = rs.getInt("id");
-                    update(res,"Reservado");
                     band = false;
                 }
             }
