@@ -13,10 +13,12 @@ public class TicketHandler extends Thread {
     private Conector connector;
     private Ticket ticket;
     final Socket insocket;
+    private static int semaforo = 0;
 
     public TicketHandler(Conector conector, Socket s){
         this.connector = conector;
         this.insocket = s;
+        semaforo = 0;
     }
 
     @Override
@@ -66,9 +68,14 @@ public class TicketHandler extends Thread {
     }
 
     private int reservarTicket(){
+        while(semaforo==1){
+
+        }
+        semaforo=1;
         int id = connector.selectTicketLibre();
         if(id != 0){
             connector.update(id,"Reservado");
+            semaforo=0;
             return id;
         }else{
             throw new Error("NoMoreTickets");
@@ -76,11 +83,16 @@ public class TicketHandler extends Thread {
     }
 
     private void comprarTicket(int idTicket){
+        while(semaforo==1){
+
+        }
+        semaforo=1;
         if(connector.selectTicketReservado(idTicket) != 0){
             connector.update(idTicket,"Comprado");
         }else{
             throw new Error("NoMoreTickets");
         }
+        semaforo=0;
     }
 
 
